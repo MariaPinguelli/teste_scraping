@@ -44,19 +44,21 @@ wait.until { scraper.find_elements(class: 'sympla-card').size > 0 }
 
 events_list = scraper.find_elements(class: 'sympla-card')
 puts "\n\nEVENT LIST LEN #{events_list.size}\n\n"
+
 events_list.each_with_index do |event, index|
   begin
     # Re-obter o elemento logo antes de interagir com ele
-    # event = scraper.find_elements(class: 'sympla-card')[index]
+    event = scraper.find_elements(class: 'sympla-card')[index]
 
     # Role para o elemento e aguarde até que ele esteja clicável
+    scraper.action.scroll_to(event).perform;
     wait.until { event.displayed? && event.enabled? }
 
     # Tente clicar no elemento
     event.click
 
     # Pegar o título do evento
-    title = scraper.find_element(tag_name: 'h1')
+    title = scraper.find_element(tag_name: 'h1').text
     puts "-------------------"
     puts "#{index} - #{title}"
 
