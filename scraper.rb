@@ -33,7 +33,6 @@ scraper.get sympla
 wait = Selenium::WebDriver::Wait.new(timeout: 10)
 
 # Fechar cookies
-# #onetrust-banner-sdk .onetrust-close-btn-ui
 wait.until { scraper.find_element(:css, '#onetrust-banner-sdk .onetrust-close-btn-ui') }
 close_cookie = scraper.find_element(:css, '#onetrust-banner-sdk .onetrust-close-btn-ui');
 close_cookie.click
@@ -41,6 +40,19 @@ close_cookie.click
 # Simular ações de usuário real
 # scraper.action.move_to_location(100, 100).perform
 # scraper.execute_script('window.scrollTo(0, document.body.scrollHeight)')
+
+wait.until { scraper.find_elements(tag_name: 'button').size > 0 }
+
+page_buttons = scraper.find_elements(tag_name: 'button')
+
+pages_count = 0
+
+page_buttons.each_with_index do |button, index|
+  text = button.text
+  if text.match?(/\A-?\d+\Z/)
+    pages_count = text.to_i > pages_count ? text.to_i : pages_count
+  end
+end
 
 # Esperar até que os elementos estejam presentes
 wait.until { scraper.find_elements(class: 'sympla-card').size > 0 }
